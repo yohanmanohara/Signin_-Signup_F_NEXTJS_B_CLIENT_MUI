@@ -1,34 +1,39 @@
 // pages/signin.tsx
 
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 const SignIn = () => {
+
+    const router = useRouter();
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+    
+        try {
+          const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+          });
+          const data = await res.json();
+    
+          if (res.ok) {
+            router.push('/employee/overview');
+            console.log('Post job is true');
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    setError('');
 
-    // Basic validation
-    if (!email || !password) {
-      setError('Both fields are required.');
-      return;
-    }
-
-    // Here you would add your authentication logic
-    console.log('Email:', email);
-    console.log('Password:', password);
-
-    // Example of a simple redirection after login
-    // Replace with your authentication logic
-    if (email === 'user@example.com' && password === 'password') {
-      window.location.href = '/dashboard';
-    } else {
-      setError('Invalid credentials');
-    }
-  };
 
   return (
     <div className="container">
